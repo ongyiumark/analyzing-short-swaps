@@ -25,6 +25,7 @@
   <summary>Table of Contents</summary>
   <ol>
     <li><a href="#about-the-project">About The Project</a></li>
+    <li><a href="#getting-started">Getting Started</a></li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributors">Contributors</a></li>
@@ -37,6 +38,14 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+<!-- GETTING STARTED -->
+## Getting Started 
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+<!-- USAGE -->
 ## Usage
 
 1. Compile the generator into a binary
@@ -53,11 +62,18 @@
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+<!-- ROADMAP -->
 ## Roadmap
+- [x] Generate data for various swapping bounds
+- [ ] Train neural network to predict the next move
+- [ ] Create pipeline to train neural network
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+
+<!-- CONTRIBUTORS -->
 ## Contributors
 - [Mark Kevin A. Ong Yiu](https://github.com/ongyiumark)
-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
