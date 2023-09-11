@@ -66,8 +66,8 @@
 <!-- ROADMAP -->
 ## Roadmap
 - [x] Generate data for various swapping bounds
-- [] Train neural network to predict the next move
-- [] Create pipeline to train neural network
+- [ ] Train neural network to predict the next move
+- [ ] Create pipeline to train neural network
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
