@@ -50,7 +50,7 @@ We train our neural network to take `[1,3,4,2]` as input and `[1,2,4,3]` as outp
 
 ### Methods
 
-We train a DNN with 3 hidden layers, each with 100 nodes. This was arbitrarily chosen to give the network a sufficient amount of complexity to learn to predict the next permutation. 
+We train a DNN with 3 hidden layers, each with $300$ nodes. This was arbitrarily chosen to give the network a sufficient amount of complexity to learn to predict the next permutation. 
 
 We also used a Leaky ReLU activation function and a mean square error (MSE) loss function. This was optimized using the Adam optimizer algorithm with a learning rate of $0.01$.
 
