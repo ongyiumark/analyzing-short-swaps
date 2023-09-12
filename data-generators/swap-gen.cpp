@@ -1,19 +1,31 @@
-#include <bits/stdc++.h>
+#include <vector>
+#include <map>
+#include <queue>
+#include <string>
 
-using namespace std;
-typedef pair<int,int> ii;
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+#include <cassert>
+#include <algorithm>
+#include <numeric>
+
+typedef std::pair<int,int> ii;
 typedef long long ll;
+typedef std::vector<int> vi;
+typedef std::vector<vi> vvi;
 
 int N, M;
-string DIR;
+std::string DIR;
 constexpr int INF = 1e9;
 
-void print(vector<int> &p) {
-  for (int i = 0; i < N; i++) cout << p[i] << (i+1 < N ? " " : "\n");
+void print(vi &p) {
+  for (int i = 0; i < N; i++) std::cout << p[i] << (i+1 < N ? " " : "\n");
 }
 
-void build_mapping(vector<vector<int>> &perms, map<vector<int>,int> &idx) {
-  vector<int> p(N);
+void build_mapping(vvi &perms, std::map<vi,int> &idx) {
+  vi p(N);
 
   ll sz = 1;
   for (int i = 1; i <= N; i++) sz *= i;
@@ -27,7 +39,7 @@ void build_mapping(vector<vector<int>> &perms, map<vector<int>,int> &idx) {
   } while(next_permutation(p.begin(), p.end()));
 }
 
-void build_adj_list(vector<vector<int>> &adj, vector<vector<int>> &perms, map<vector<int>,int> &idx) {
+void build_adj_list(vvi &adj, vvi &perms, std::map<vi,int> &idx) {
   for (auto &pp : perms) {
     int u = idx[pp];
     for (int i = 0; i < N; i++) {
@@ -35,20 +47,20 @@ void build_adj_list(vector<vector<int>> &adj, vector<vector<int>> &perms, map<ve
         if (i+k >= N) continue;
         if (pp[i] < pp[i+k]) continue; // ignore noncorrecting swaps (Heath and Vergara, 2003)
   
-        swap(pp[i], pp[i+k]);
+        std::swap(pp[i], pp[i+k]);
         int v = idx[pp];
 
         adj[v].push_back(u); // we will bfs starting from the identity permutation
-        swap(pp[i], pp[i+k]);
+        std::swap(pp[i], pp[i+k]);
       }
     }
   }
 }
 
-void bfs(int s, vector<vector<int>> &adj, vector<int> &par) {
-  vector<bool> vis(adj.size());
+void bfs(int s, vvi &adj, vi &par) {
+  std::vector<bool> vis(adj.size());
 
-  queue<int> q;
+  std::queue<int> q;
   q.push(s);
   vis[s] = true;
 
@@ -66,11 +78,11 @@ void bfs(int s, vector<vector<int>> &adj, vector<int> &par) {
   }
 }
 
-void generate_csv(vector<vector<int>> &perms, vector<int> &par) {
-  ostringstream s;
+void generate_csv(vvi &perms, vi &par) {
+  std::ostringstream s;
   if (DIR.size()) s << "./../data/" << DIR << "/perm" << N << ".csv"; 
   else s << "./../data/" << M << "swap/perm" << N << ".csv";
-  ofstream file(s.str());
+  std::ofstream file(s.str());
 
   for (int i = 0; i < N; i++) file << "a" << i+1 << ",";
   for (int i = 0; i < N; i++) file << "b" << i+1 << (i+1 < N ? "," : "\n");
@@ -92,14 +104,14 @@ int main(int argc, char* argv[]) {
 
   if (argc > 3) DIR = argv[3];
 
-  vector<vector<int>> perms; // stores all permuations
-  map<vector<int>, int> idx; // maps a permutation to its index
+  vvi perms; // stores all permuations
+  std::map<vi, int> idx; // maps a permutation to its index
   build_mapping(perms, idx);
 
-  vector<vector<int>> adj(perms.size());
+  vvi adj(perms.size());
   build_adj_list(adj, perms, idx); // adjacency list of possible swaps
 
-  vector<int> par(adj.size());
+  vi par(adj.size());
   bfs(0, adj, par); // find the shortest paths using bfs
 
   generate_csv(perms, par); // generate csv dataset
