@@ -73,9 +73,11 @@ Our results can be found in `epoch-results.csv`.
 <!-- USAGE -->
 ## Usage
 
-1. Compile the generator into a binary
+1. Compile the generators into a binary
     ```sh
     g++ swap-gen.cpp -O3 -o swap-gen
+    g++ insert-gen.cpp -O3 -o insert-gen
+    g++ reverse-gen.cpp -O3 -o reverse-gen
     ```
 2. Run the binary
     ```sh
@@ -85,6 +87,24 @@ Our results can be found in `epoch-results.csv`.
 
     `DIR` is an optional name for the subdirectory where the data will be saved. By default, the subdirectory is `[M]swap`.
 
+    <br />
+
+    ```sh
+    ./insert-gen N M [DIR]
+    ```
+    where `N` is the length of the permutation, and `M` is the bound for inserts.
+
+    `DIR` is an optional name for the subdirectory where the data will be saved. By default, the subdirectory is `[M]insert`.
+
+    <br />
+
+    ```sh
+    ./insert-gen N M [DIR]
+    ```
+    where `N` is the length of the permutation, and `M` is the bound for inserts.
+
+    `DIR` is an optional name for the subdirectory where the data will be saved. By default, the subdirectory is `[M]insert`.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
@@ -92,8 +112,8 @@ Our results can be found in `epoch-results.csv`.
 ## Roadmap
 - [x] Generate data for various swapping bounds
 - [x] Create a pipeline to train neural networks
-- [ ] Generate data for various reversal bounds
-- [ ] Generate data for various insertion bounds
+- [x] Generate data for various reversal bounds
+- [x] Generate data for various insertion bounds
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
