@@ -1,4 +1,4 @@
-for x in 4 5 6 7
+for x in 4 5 6 7 8
 do
   echo $x
 
