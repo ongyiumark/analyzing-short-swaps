@@ -65,7 +65,7 @@ We compare our results for _short swaps_ with the same methods applied to other 
 
 Our results can be found in `epoch-results.csv`.
 
-![Inital results using epochs as a measure](initial-epoch-results.png)
+![Inital results using epochs as a measure](supervised-learning/Epoch_MLP-3-300_Results.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -73,6 +73,34 @@ Our results can be found in `epoch-results.csv`.
 <!-- USAGE -->
 ## Usage
 
+### Permutation Converter
+Instead of storing the each permutation in our data set, we can represent it with a single index where the index of a permutation $p$ is the number of permuations $q$ such that $q$ is lexicographically smaller than $p$.
+
+In other words, the index of the permutation $p$ is the index of $p$ when all possible permutations are sorted in an array.
+
+We have written an algorithm that converts a permutation to its index and vice versa in $O(n\log n)$ where $n$ is the size of the permutation. The algorithm can be found in `converter.cpp` of the `data-generators` directory, which can be executed using `converter_cli.exe` on windows or `converter_cli` on linux.
+
+To convert an index to a permutation, we use the `-i` flag, and to convert a permutation to its index, we use the `-p` flag.
+```sh
+./converter_cli.exe -i [index] [size of permutation]
+```
+
+```sh
+./converter_cli.exe -p [space-separated permutation]
+```
+
+Examples are shown below.
+```sh
+./converter.exe -i 3 4
+>>> 1 3 4 2
+```
+
+```sh
+./converter.exe -p 5 4 3 2 1
+>>> 119
+```
+
+### Generators
 1. Compile the generators into a binary
     ```sh
     g++ swap-gen.cpp -O3 -o swap-gen
@@ -114,6 +142,9 @@ Our results can be found in `epoch-results.csv`.
 - [x] Create a pipeline to train neural networks
 - [x] Generate data for various reversal bounds
 - [x] Generate data for various insertion bounds
+- [ ] Generate data for various block swapping bounds
+- [ ] Compress data set by storing index of permutation
+- [ ] Implement reinforcement learning
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
