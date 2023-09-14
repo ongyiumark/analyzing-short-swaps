@@ -13,8 +13,10 @@
 #endif
 
 void createDir(std::string dir) {
-  #if _WIN32
+  #if _MSC_VER
   _mkdir(dir.data());
+  #elif _WIN32
+  mkdir(dir.data());
   #else
   mkdir(dir.data(), 0777);
   #endif
