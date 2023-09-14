@@ -73,6 +73,34 @@ Our results can be found in `epoch-results.csv`.
 <!-- USAGE -->
 ## Usage
 
+### Permutation Converter
+Instead of storing the each permutation in our data set, we can represent it with a single index where the index of a permutation $p$ is the number of permuations $q$ such that $q$ is lexicographically smaller than $p$.
+
+In other words, the index of the permutation $p$ is the index of $p$ when all possible permutations are sorted in an array.
+
+We have written an algorithm that converts a permutation to its index and vice versa in $O(n\log n)$ where $n$ is the size of the permutation. This can be found in `converter.cpp`, which can be executed using `converter.exe`.
+
+To convert an index to a permutation, we use the `-i` flag, and to convert a permutation to its index, we use the `-p` flag.
+```sh
+./converter.exe -i [index] [size of permutation]
+```
+
+```sh
+./converter.exe -p [space-separated permutation]
+```
+
+Examples are shown below.
+```sh
+./converter.exe -i 3 4
+>>> 1 3 4 2
+```
+
+```sh
+./converter.exe -p 5 4 3 2 1
+>>> 119
+```
+
+### Generators
 1. Compile the generators into a binary
     ```sh
     g++ swap-gen.cpp -O3 -o swap-gen
@@ -114,6 +142,9 @@ Our results can be found in `epoch-results.csv`.
 - [x] Create a pipeline to train neural networks
 - [x] Generate data for various reversal bounds
 - [x] Generate data for various insertion bounds
+- [ ] Generate data for various block swapping bounds
+- [ ] Compress data set by storing index of permutation
+- [ ] Implement reinforcement learning
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
