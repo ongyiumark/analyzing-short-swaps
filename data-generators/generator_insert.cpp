@@ -12,10 +12,16 @@ struct InsertGenerator : Generator {
     std::vector<int> p = get_permutation_from_index(u, N);
     for (int i = 0; i < N; i++) {
       for (int j = 1; j < M; j++) {
-        if (i+j >= N) continue;
-        for (int k = i; k < i+j; k++) std::swap(p[k], p[k+1]);
-        moves.emplace_back(get_index_of_permutation(p));
-        for (int k = i; k < i+j; k++) std::swap(p[k], p[k+1]);
+        if (i+j < N) {
+          for (int k = i; k < i+j; k++) std::swap(p[k], p[k+1]);
+          moves.emplace_back(get_index_of_permutation(p));
+          for (int k = i+j-1; k >= i; k--) std::swap(p[k], p[k+1]);
+        }
+        if (i-j >= 0) {
+          for (int k = i; k > i-j; k--) std::swap(p[k], p[k-1]);
+          moves.emplace_back(get_index_of_permutation(p));
+          for (int k = i-j+1; k <= i; k++) std::swap(p[k], p[k-1]);
+        }
       }
     }
     return moves;

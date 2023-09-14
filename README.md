@@ -65,7 +65,7 @@ We compare our results for _short swaps_ with the same methods applied to other 
 
 Our results can be found in `epoch-results.csv`.
 
-![Inital results using epochs as a measure](initial-epoch-results.png)
+![Inital results using epochs as a measure](supervised-learning/Epoch_MLP-3-300_Results.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -78,7 +78,7 @@ Instead of storing the each permutation in our data set, we can represent it wit
 
 In other words, the index of the permutation $p$ is the index of $p$ when all possible permutations are sorted in an array.
 
-We have written an algorithm that converts a permutation to its index and vice versa in $O(n\log n)$ where $n$ is the size of the permutation. The algorithm can be found in `converter.cpp` of the `data-generators` directory, which can be executed using `converter_cli.exe`.
+We have written an algorithm that converts a permutation to its index and vice versa in $O(n\log n)$ where $n$ is the size of the permutation. The algorithm can be found in `converter.cpp` of the `data-generators` directory, which can be executed using `converter_cli.exe` on windows or `converter_cli` on linux.
 
 To convert an index to a permutation, we use the `-i` flag, and to convert a permutation to its index, we use the `-p` flag.
 ```sh
