@@ -78,15 +78,15 @@ Instead of storing the each permutation in our data set, we can represent it wit
 
 In other words, the index of the permutation $p$ is the index of $p$ when all possible permutations are sorted in an array.
 
-We have written an algorithm that converts a permutation to its index and vice versa in $O(n\log n)$ where $n$ is the size of the permutation. This can be found in `converter.cpp`, which can be executed using `converter.exe`.
+We have written an algorithm that converts a permutation to its index and vice versa in $O(n\log n)$ where $n$ is the size of the permutation. The algorithm can be found in `converter.cpp` of the `data-generators` directory, which can be executed using `converter_cli.exe`.
 
 To convert an index to a permutation, we use the `-i` flag, and to convert a permutation to its index, we use the `-p` flag.
 ```sh
-./converter.exe -i [index] [size of permutation]
+./converter_cli.exe -i [index] [size of permutation]
 ```
 
 ```sh
-./converter.exe -p [space-separated permutation]
+./converter_cli.exe -p [space-separated permutation]
 ```
 
 Examples are shown below.

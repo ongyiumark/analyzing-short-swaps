@@ -162,6 +162,7 @@ cython_debug/
 # random trash
 **/basura/
 basura*
+.vscode
 
 # cpp object files
 *.obj
