@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
   int N = atoi(argv[1]), M = atoi(argv[2]);
   std::string DIR = (argc == 4 ? argv[3] : "");
-  SwapGenerator sg(N, M, DIR);
-  sg.generate();
+  SwapGenerator g(N, M, DIR);
+  g.generate();
   return 0;
 }
