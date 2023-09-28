@@ -41,7 +41,7 @@ def test(model, dataX, dataY):
   return accuracy
   
 strategy = "swap-3"
-n = 7
+n = 6
 if __name__ == "__main__":
   df_hi = pd.read_csv(f"../data/{strategy}/perm{n}.csv")
   dataX = df_hi['state'].values

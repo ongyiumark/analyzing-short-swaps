@@ -1,18 +1,4 @@
-import subprocess as sub
 import numpy as np
-
-EXE_DIR = "../data-generators/windows-exe"
-EXE_FILE = "converter_cli.exe"
-
-def get_permutation_from_index(k, n):
-  result = sub.run([f"{EXE_DIR}/{EXE_FILE}", "-i", str(k), str(n)], stdout=sub.PIPE)
-  output = [int(x) for x in result.stdout.decode().split()]
-  return np.array(output)
-
-def get_index_of_permutation(p):
-  result = sub.run([f"{EXE_DIR}/{EXE_FILE}", "-p", *[str(x) for x in p]], stdout=sub.PIPE)
-  output = int(result.stdout.decode())
-  return output
 
 class OrderedSet():
   def __init__(self, n):
@@ -53,7 +39,17 @@ class OrderedSet():
     
     return result+1
 
-def get_permutation_from_index_python(k, n):
+def get_permutation_from_index(k, n):
+  """
+  Returns the size-n permuation of a given index
+
+  Parameters:
+    k (int): The index of the permutation (0 <= k < n!)
+    n (int): The size of the permutation
+  
+  Returns:
+    numpy.ndarray[int]: The resulting permutation
+  """
   p = [0]*n
   ordered_set = OrderedSet(n)
   for i in range(n):
@@ -76,9 +72,19 @@ def get_permutation_from_index_python(k, n):
     k -= ans*np.math.factorial(n-i-1)
     ordered_set.erase(p[i])
 
+  p = np.array(p, dtype=np.int32)
   return p
   
-def get_index_from_permutation_python(state):
+def get_index_of_permutation(state):
+  """
+  Returns the index of a permutation
+
+  Parameters:
+    state (numpy.ndarray[int]): The permutation
+  
+  Returns:
+    int: The index of the permutaton
+  """
   n = len(state)
   ordered_set = OrderedSet(n)
   for i in range(n):
