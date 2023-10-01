@@ -60,14 +60,14 @@ def is_valid_move(arr_before, arr_after, strategy):
     Parameters:
         arr_before (list): The initial array before the move.
         arr_after (list): The resulting array after the move.
-        strategy (str): The move strategy, e.g., "swap-4" or "reverse-3".
+        strategy (str): The move strategy, e.g., "swap-4", "reverse-3", or "insert-2".
 
     Returns:
         bool: True if the move is valid, False otherwise.
     """
 
     # Validate strategy format
-    if not (strategy.startswith("swap-") or strategy.startswith("reverse-")):
+    if not (strategy.startswith("swap-") or strategy.startswith("reverse-") or strategy.startswith("insert-")):
         raise ValueError("Invalid strategy format. Must start with 'swap-' or 'reverse-'.")
 
     try:
@@ -101,7 +101,7 @@ def is_valid_move(arr_before, arr_after, strategy):
         return swap_count == 2 #Only two elements should be in different places
     
     elif strategy.startswith("reverse-"):
-        # Find the first two different elements from both ends of the after array, then
+        # Find the first two different elements from both ends of the after array, then reverse 
         first_diff_idx = None
         last_diff_idx = None
         for i in range(len(arr_before)):
@@ -116,7 +116,34 @@ def is_valid_move(arr_before, arr_after, strategy):
 
         return arr_after_copy == arr_before
 
-# Example usage:
+    elif strategy.startswith("insert-"):
+        n = max_diff
+        counter = 0
+        largest_diff = 0
+        for i in range(len(arr_before)):
+            if arr_before[i] != arr_after[i]:
+                diff = arr_after.index(arr_before[i]) - i  # Calculate the index difference
+                # Check if the move is within the allowed range
+                if abs(diff) > largest_diff:
+                    largest_diff = diff
+                if abs(diff) <= n and abs(diff) > 1:
+                    if diff > 0:
+                        for j in range(i, i + diff):
+                            if arr_after[j] != arr_before[j + 1]:
+                                return False  # Invalid move
+                    elif diff < 0:
+                        for j in range(diff + i + 1, i+1):
+                            if arr_after[j] != arr_before[j - 1]:
+                                return False  # Invalid move
+                elif abs(diff) == 1:
+                    counter += 1
+                else:
+                    return False  # Invalid move
+        if largest_diff == 1:
+            return counter == 2 # If inserts of only one-away were done, we should check that only one has been performed
+        return True  # Valid move
+    
+# Example usage
 if __name__ == '__main__':
     arr_before = [1, 2, 3, 4, 5]
     arr_after = [1, 5, 3, 4, 2]
@@ -128,9 +155,17 @@ if __name__ == '__main__':
         print("The move is not valid.")
 
     arr_before = [1, 2, 3, 4, 5]
-    arr_after = [3, 2, 1, 5, 4]
+    arr_after = [3, 2, 1, 4, 5]
     strategy = "reverse-3"
 
+    if is_valid_move(arr_before, arr_after, strategy):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+    
+    arr_before = [1, 2, 3, 4 ,5]
+    arr_after = [1, 3, 4, 5, 2]
+    strategy = "insert-3"
     if is_valid_move(arr_before, arr_after, strategy):
         print("The move is valid.")
     else:
