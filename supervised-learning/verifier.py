@@ -60,15 +60,15 @@ def is_valid_move(arr_before, arr_after, strategy):
     Parameters:
         arr_before (list): The initial array before the move.
         arr_after (list): The resulting array after the move.
-        strategy (str): The move strategy, e.g., "swap-4", "reverse-3", or "insert-2".
+        strategy (str): The move strategy, e.g., "swap-4", "reverse-3", "insert-2", or "block-n".
 
     Returns:
         bool: True if the move is valid, False otherwise.
     """
 
     # Validate strategy format
-    if not (strategy.startswith("swap-") or strategy.startswith("reverse-") or strategy.startswith("insert-")):
-        raise ValueError("Invalid strategy format. Must start with 'swap-' or 'reverse-'.")
+    if not (strategy.startswith("swap-") or strategy.startswith("reverse-") or strategy.startswith("insert-") or strategy.startswith("block-")):
+        raise ValueError("Invalid strategy format. Must start with 'swap-', 'reverse-', 'insert-' or 'block-'.")
 
     try:
         # Extract the maximum allowed difference from the strategy
@@ -77,13 +77,13 @@ def is_valid_move(arr_before, arr_after, strategy):
         else:
             max_diff = int(strategy.split('-')[1])
     except ValueError:
-        raise ValueError("Invalid strategy format. Must be 'swap-n' or 'reverse-n' where n is an integer or the string n.")
+        raise ValueError("Invalid strategy format. Must be 'x-n' where x is the strategy name, n is an integer or the string n.")
 
     # Check if the lengths of both arrays are the same
     if len(arr_before) != len(arr_after):
         return False
 
-    # Check if the strategy is a swap or reverse operation
+    # Check the strategy
     if strategy.startswith("swap-"):
         swap_count = 0 
         # Iterate through both arrays and compare the elements
@@ -143,6 +143,28 @@ def is_valid_move(arr_before, arr_after, strategy):
             return counter == 2 # If inserts of only one-away were done, we should check that only one has been performed
         return True  # Valid move
     
+    elif strategy.startswith("block-"):
+        first_diff_idx = None
+        last_diff_idx = None
+        for i in range(len(arr_before)):
+            if arr_before[i] != arr_after[i]:
+                if first_diff_idx is None:
+                    first_diff_idx = i
+                last_diff_idx = i
+        if first_diff_idx is None or first_diff_idx == last_diff_idx or last_diff_idx - first_diff_idx > max_diff-1:
+            return False
+        block1size = last_diff_idx - arr_after.index(arr_before[last_diff_idx])
+        block2size = arr_after.index(arr_before[first_diff_idx]) - first_diff_idx
+        for i in range(last_diff_idx - block2size+1, last_diff_idx+1):
+            if arr_before[i] != arr_after[i-block1size]:
+                return False
+        for i in range(first_diff_idx, first_diff_idx+block1size):
+            if arr_before[i] != arr_after[i+block2size]:
+                return False
+        return True
+   
+
+    
 # Example usage
 if __name__ == '__main__':
     arr_before = [1, 2, 3, 4, 5]
@@ -166,6 +188,14 @@ if __name__ == '__main__':
     arr_before = [1, 2, 3, 4 ,5]
     arr_after = [1, 3, 4, 5, 2]
     strategy = "insert-3"
+    if is_valid_move(arr_before, arr_after, strategy):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+
+    arr_before = [1, 2, 3, 4, 5, 6, 7, 8]
+    arr_after = [1, 4, 5, 6, 7, 2, 3, 8]
+    strategy = "block-6"
     if is_valid_move(arr_before, arr_after, strategy):
         print("The move is valid.")
     else:
