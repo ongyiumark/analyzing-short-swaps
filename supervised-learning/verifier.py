@@ -83,10 +83,6 @@ def is_valid_move(arr_before, arr_after, strategy):
     if len(arr_before) != len(arr_after):
         return False
 
-    # Define a function to reverse a portion of the array
-    def reverse_subarray(arr, i, j):
-        return arr[:i] + arr[i:j+1][::-1] + arr[j+1:]
-
     # Check if the strategy is a swap or reverse operation
     if strategy.startswith("swap-"):
         swap_count = 0 
@@ -119,8 +115,6 @@ def is_valid_move(arr_before, arr_after, strategy):
         arr_after_copy[first_diff_idx:last_diff_idx + 1] = arr_after[first_diff_idx:last_diff_idx + 1][::-1]
 
         return arr_after_copy == arr_before
-    # If all checks pass, the move is valid
-    return True
 
 # Example usage:
 if __name__ == '__main__':
