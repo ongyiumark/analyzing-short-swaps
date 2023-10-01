@@ -142,8 +142,9 @@ Examples are shown below.
 - [x] Create a pipeline to train neural networks
 - [x] Generate data for various reversal bounds
 - [x] Generate data for various insertion bounds
-- [ ] Generate data for various block swapping bounds
-- [ ] Compress data set by storing index of permutation
+- [x] Generate data for various block swapping bounds
+- [x] Compress data set by storing index of permutation
+- [ ] Implement other measures
 - [ ] Implement reinforcement learning
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
