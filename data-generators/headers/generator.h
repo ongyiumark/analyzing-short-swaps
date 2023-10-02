@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+void createDir(std::string dir);
+
 class Generator {
 protected:
   int N, M;

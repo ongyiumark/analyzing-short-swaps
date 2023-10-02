@@ -26,6 +26,7 @@ std::vector<long long> InsertGenerator::get_allowed_moves(long long u) {
   return moves;
 }
 
+#ifndef HAS_MAIN
 int main(int argc, char* argv[]) {
   if (argc != 3 && argc != 4) {
     std::cerr << "Expected 2 or 3 parameters, but received " << argc-1 << "." << std::endl;  
@@ -38,3 +39,4 @@ int main(int argc, char* argv[]) {
   g.generate();
   return 0;
 }
+#endif
