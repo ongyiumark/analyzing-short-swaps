@@ -4,11 +4,12 @@
 #include <iostream>
 
 BlockGenerator::BlockGenerator(int _N, int _M, std::string DIR) 
-  : Generator(_N, _M, (DIR.size() ? DIR : "block-"+std::to_string(_M))) {}
+  : Generator(_N, _M, (DIR.size() ? DIR : "block-"+std::to_string(_M))) {
+    get_possible_moves();
+  }
 
-std::vector<long long> BlockGenerator::get_allowed_moves(long long u) {
-  std::vector<long long> moves;
-  std::vector<int> p = get_permutation_from_index(u, N);
+void BlockGenerator::get_possible_moves() {
+  std::vector<int> p = get_permutation_from_index(0, N);
   
   for (int i = 0; i < N; i++) {
     for (int j = 1; j < M; j++) {
@@ -29,7 +30,6 @@ std::vector<long long> BlockGenerator::get_allowed_moves(long long u) {
       }
     }
   }
-  return moves;
 }
 
 #ifndef HAS_MAIN
