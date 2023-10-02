@@ -52,6 +52,86 @@ def is_valid_array(arr):
     
     return True
 
+def check_swap(arr_before, arr_after, max_diff):
+    swap_count = 0
+    # Iterate through both arrays and compare the elements
+    for i in range(len(arr_before)):
+        # Calculate the absolute difference between the positions of the same element
+        pos_diff = abs(arr_before.index(arr_after[i]) - i)
+
+        # Check if the absolute difference is within the allowed range
+        if pos_diff >= max_diff:
+            return False
+
+        if arr_before[i] != arr_after[i]:
+            swap_count += 1
+        
+    return swap_count == 2 #Only two elements should be in different places
+
+def check_reversal(arr_before, arr_after, max_diff):
+        # Find the first two different elements from both ends of the after array, then reverse 
+        first_diff_idx = None
+        last_diff_idx = None
+        for i in range(len(arr_before)):
+            if arr_before[i] != arr_after[i]:
+                if first_diff_idx is None:
+                    first_diff_idx = i
+                last_diff_idx = i
+        if first_diff_idx is None or first_diff_idx == last_diff_idx or last_diff_idx - first_diff_idx >= max_diff:
+            return False
+        arr_after_copy = arr_after[:]
+        arr_after_copy[first_diff_idx:last_diff_idx + 1] = arr_after[first_diff_idx:last_diff_idx + 1][::-1]
+
+        return arr_after_copy == arr_before
+
+def check_insert(arr_before, arr_after, max_diff):
+    after_diffs = []
+    ups = 0
+    downs = 0
+    big_diff = 0
+    for pos in range(len(arr_before)):
+        element = arr_before[pos]
+        after_pos = arr_after.index(element)
+        diff = after_pos - pos
+        big_diff = max(big_diff, abs(diff))
+        if diff > 0: ups += 1
+        elif diff < 0: downs += 1
+        after_diffs.append(diff)
+    
+    if (big_diff >= max_diff) or big_diff == 0:
+        return False
+    if (ups > 1 and downs > 1):
+        return False
+    
+    return sum(after_diffs) == 0 
+
+def check_block(arr_before, arr_after, max_diff):
+    first_idx = None
+    last_idx = None
+
+    for pos in range(len(arr_before)):
+        if arr_before[pos] != arr_after[pos]:
+            first_idx = pos
+            break
+    for pos in range(len(arr_before)-1, -1, -1):
+        if arr_before[pos] != arr_after[pos]:
+            last_idx = pos
+            break
+    
+    if first_idx is None or last_idx is None or (last_idx - first_idx == 0) or (last_idx - first_idx >= max_diff):
+        return False
+    
+    first_diff = arr_after.index(arr_before[first_idx]) - first_idx
+    anchor_idx = first_idx + 1
+    for pos in range(first_idx, last_idx):
+        diff = arr_after.index(arr_before[pos]) - pos
+        if diff != first_diff:
+            anchor_idx = pos
+            break
+    
+    comp_arr = arr_before[0:first_idx] + arr_before[anchor_idx:last_idx+1] + arr_before[first_idx:anchor_idx] + arr_before[last_idx+1:]
+    return arr_after == comp_arr
+
 
 def is_valid_move(arr_before, arr_after, strategy):
     """
@@ -85,99 +165,32 @@ def is_valid_move(arr_before, arr_after, strategy):
 
     # Check the strategy
     if strategy.startswith("swap-"):
-        swap_count = 0 
-        # Iterate through both arrays and compare the elements
-        for i in range(len(arr_before)):
-            # Calculate the absolute difference between the positions of the same element
-            pos_diff = abs(arr_before.index(arr_after[i]) - i)
-
-            # Check if the absolute difference is within the allowed range
-            if pos_diff > max_diff:
-                return False
-
-            if arr_before[i] != arr_after[i]:
-                swap_count += 1
-            
-        return swap_count == 2 #Only two elements should be in different places
+        return check_swap(arr_before, arr_after, max_diff)
     
     elif strategy.startswith("reverse-"):
-        # Find the first two different elements from both ends of the after array, then reverse 
-        first_diff_idx = None
-        last_diff_idx = None
-        for i in range(len(arr_before)):
-            if arr_before[i] != arr_after[i]:
-                if first_diff_idx is None:
-                    first_diff_idx = i
-                last_diff_idx = i
-        if first_diff_idx is None or first_diff_idx == last_diff_idx or last_diff_idx - first_diff_idx > max_diff:
-            return False
-        arr_after_copy = arr_after[:]
-        arr_after_copy[first_diff_idx:last_diff_idx + 1] = arr_after[first_diff_idx:last_diff_idx + 1][::-1]
-
-        return arr_after_copy == arr_before
+        return check_reversal(arr_before, arr_after, max_diff)
 
     elif strategy.startswith("insert-"):
-        n = max_diff
-        counter = 0
-        largest_diff = 0
-        for i in range(len(arr_before)):
-            if arr_before[i] != arr_after[i]:
-                diff = arr_after.index(arr_before[i]) - i  # Calculate the index difference
-                # Check if the move is within the allowed range
-                if abs(diff) > largest_diff:
-                    largest_diff = diff
-                if abs(diff) <= n and abs(diff) > 1:
-                    if diff > 0:
-                        for j in range(i, i + diff):
-                            if arr_after[j] != arr_before[j + 1]:
-                                return False  # Invalid move
-                    elif diff < 0:
-                        for j in range(diff + i + 1, i+1):
-                            if arr_after[j] != arr_before[j - 1]:
-                                return False  # Invalid move
-                elif abs(diff) == 1:
-                    counter += 1
-                else:
-                    return False  # Invalid move
-        if largest_diff == 1:
-            return counter == 2 # If inserts of only one-away were done, we should check that only one has been performed
-        return True  # Valid move
+        return check_insert(arr_before, arr_after, max_diff)        
     
     elif strategy.startswith("block-"):
-        first_diff_idx = None
-        last_diff_idx = None
-        for i in range(len(arr_before)):
-            if arr_before[i] != arr_after[i]:
-                if first_diff_idx is None:
-                    first_diff_idx = i
-                last_diff_idx = i
-        if first_diff_idx is None or first_diff_idx == last_diff_idx or last_diff_idx - first_diff_idx > max_diff-1:
-            return False
-        block1size = last_diff_idx - arr_after.index(arr_before[last_diff_idx])
-        block2size = arr_after.index(arr_before[first_diff_idx]) - first_diff_idx
-        for i in range(last_diff_idx - block2size+1, last_diff_idx+1):
-            if arr_before[i] != arr_after[i-block1size]:
-                return False
-        for i in range(first_diff_idx, first_diff_idx+block1size):
-            if arr_before[i] != arr_after[i+block2size]:
-                return False
-        return True
+        return check_block(arr_before, arr_after, max_diff)
    
 
     
 # Example usage
 if __name__ == '__main__':
-    arr_before = [1, 2, 3, 4, 5]
-    arr_after = [1, 5, 3, 4, 2]
-    strategy = "swap-4"
+    arr_before = [1, 2, 3, 4]
+    arr_after = [4, 2, 3, 1]
+    strategy = "swap-3"
 
     if is_valid_move(arr_before, arr_after, strategy):
         print("The move is valid.")
     else:
         print("The move is not valid.")
 
-    arr_before = [1, 2, 3, 4, 5]
-    arr_after = [3, 2, 1, 4, 5]
+    arr_before = [1, 2, 3, 4]
+    arr_after = [4, 3, 2, 1]
     strategy = "reverse-3"
 
     if is_valid_move(arr_before, arr_after, strategy):
@@ -185,8 +198,8 @@ if __name__ == '__main__':
     else:
         print("The move is not valid.")
     
-    arr_before = [1, 2, 3, 4 ,5]
-    arr_after = [1, 3, 4, 5, 2]
+    arr_before = [1, 2, 3, 4]
+    arr_after = [2, 3, 4, 1]
     strategy = "insert-3"
     if is_valid_move(arr_before, arr_after, strategy):
         print("The move is valid.")
@@ -197,6 +210,58 @@ if __name__ == '__main__':
     arr_after = [1, 4, 5, 6, 7, 2, 3, 8]
     strategy = "block-6"
     if is_valid_move(arr_before, arr_after, strategy):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+
+    print("-----INSERTS------")
+    arr_before = [1, 2, 3, 4]
+    arr_after = [2, 3, 4, 1]
+    if check_insert(arr_before, arr_after, 3):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+
+    arr_before = [1, 2, 3, 4, 5, 6, 7, 8]
+    arr_after = [1, 3, 4, 2, 5, 7, 8, 6]
+    if is_valid_move(arr_before, arr_after, "insert-3"):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+
+    arr_before = [1, 2, 3, 4]
+    arr_after = [2, 3, 4, 1]
+    if check_insert(arr_before, arr_after, 4):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+    
+
+    print("-----BLOCK MOVES------")
+    arr_before = [1, 2, 3, 4, 5]
+    arr_after = [3, 4, 5, 1, 2]
+    if check_block(arr_before, arr_after, 5):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+
+    arr_before = [1, 2, 3, 4, 5]
+    arr_after = [3, 4, 1, 2, 5]
+    if check_block(arr_before, arr_after, 4):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+
+    arr_before = [1, 2, 3, 4, 5]
+    arr_after = [1, 2, 4, 3, 5]
+    if check_block(arr_before, arr_after, 5):
+        print("The move is valid.")
+    else:
+        print("The move is not valid.")
+
+    arr_before = [1, 2, 3, 4, 5]
+    arr_after = [1, 3, 2, 5, 4]
+    if is_valid_move(arr_before, arr_after, "block-5"):
         print("The move is valid.")
     else:
         print("The move is not valid.")
