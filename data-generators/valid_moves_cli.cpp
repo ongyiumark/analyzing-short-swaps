@@ -74,9 +74,9 @@ int main(int argc, char* argv[]) {
   std::ostringstream s;
   s << "./../data/tmp/" << strategy << "-" << M << "-perm" << N << ".csv"; 
   std::ofstream file(s.str());
-  file << "move, valid\n";
+  file << "move,valid\n";
   for (int u = 0; u < sz; u++) {
-    if (u % 100000 == 0) std::cerr << "CSV: " << u << "/" << sz << std::endl;
+    if (u % 10000 == 0) std::cerr << "CSV: " << u << "/" << sz << std::endl;
     file << u << "," << (valid_moves[u] ? 1 : 0) << "\n";
   }
   
