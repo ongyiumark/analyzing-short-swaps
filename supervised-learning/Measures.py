@@ -4,12 +4,10 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
 import os
 from tqdm import tqdm
 
-from converter import get_index_of_permutation, get_permutation_from_index
 
 class Measure:
   def __init__(self, ModelClass, DatasetClass, args, network_args):
@@ -20,37 +18,41 @@ class Measure:
     self.network_args = network_args
     self.results = []
 
-  def train(self, data_loader, model, n, strategy):
+  def train_epoch(self, data_loader, model, optimizer, loss_fn, epoch):
     model.train()
+    total_loss = 0.0
+    count = 1
+    tqdm_loader = tqdm(data_loader, leave=False)
+
+    for batch_idx, (x,y) in enumerate(tqdm_loader):
+      predictions = model(x)
+      loss = loss_fn(predictions, y)
+      
+      optimizer.zero_grad()
+      loss.backward()
+      optimizer.step()
+
+      tqdm_loader.set_postfix(average_loss=total_loss/count, epoch=epoch)
+      total_loss += loss.item()
+      count += 1
+
+    mse = total_loss/count
+    return mse
+
+  def train(self, data_loader, model, n, strategy):
     loss_fn = nn.MSELoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=self.args["learning_rate"])
 
     mse = float("inf")
+    accuracy = 0
     epoch = 0
-    while mse > 0.01 and epoch < self.args["max_epochs"]:
-      ave_loss = 0.0
-      count = 1
-      tqdm_loader = tqdm(data_loader, leave=False)
-
-      for batch_idx, (x,y) in enumerate(tqdm_loader):
-        predictions = model(x)
-        loss = loss_fn(predictions, y)
-        
-        optimizer.zero_grad()
-        loss.backward()
-        optimizer.step()
-
-        tqdm_loader.set_postfix(average_loss=ave_loss/count, epoch=epoch)
-        ave_loss += loss.item()
-        count += 1
-      
-      ave_loss /= count
-
+    while accuracy < 0.95 and epoch < self.args["max_epochs"]:
       epoch += 1
-      mse = ave_loss
-
+      mse = self.train_epoch(data_loader, model, optimizer, loss_fn, epoch)
+      accuracy = self.test(data_loader, model)
+    
       if epoch % 100 == 0:
-        print(f"Strategy: {strategy}, size: {n}, epoch: {epoch}, mse: {mse}")
+        print(f"Strategy: {strategy}, size: {n}, epoch: {epoch}, MSE: {mse:.4f}, accuracy: {accuracy:.4f}")
 
     return epoch, mse
   
@@ -119,7 +121,7 @@ class Measure:
     extended_df.to_csv(self.args["results_path"], index=False)
 
   def graph_results(self):
-    fig, axes = plt.subplots(2, 3, figsize=(20,10))
+    fig, axes = plt.subplots(3, 4, figsize=(25,15))
     df = pd.read_csv(self.args["results_path"])
     df = df.query(f"network==\"{self.args['network_label']}\"")
 
@@ -145,8 +147,9 @@ class Measure:
       ax.legend(loc="upper left")
       acc_ax.legend(loc="upper right")
 
-    fig.suptitle(f"Training with {self.args['network_label']} until MSE $<0.01$.")
+    fig.suptitle(f"Training with {self.args['network_label']} until ACC $>0.95$.")
     fig.tight_layout()
+    fig.subplots_adjust(top=0.95)
 
     fig.savefig(f"Epoch_{self.args['network_label']}_Results.png")
 
