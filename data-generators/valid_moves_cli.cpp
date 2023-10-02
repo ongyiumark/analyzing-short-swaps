@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
   }
   if (no_bound) M = N;
   
-  std::vector<std::string> valid_strategies = {"swap", "insert", "reserve", "block"};
+  std::vector<std::string> valid_strategies = {"swap", "insert", "reverse", "block"};
   if (std::find(valid_strategies.begin(), valid_strategies.end(), strategy) == valid_strategies.end()) {
     if (strategy.size() == 0) std::cerr << "You must specify a strategy with '-s'." << std::endl;
     else std::cerr << "'" << strategy << "'" << " is not a valid strategy." << std::endl;
