@@ -3,10 +3,11 @@
 std::vector<long long> factorial;
 
 // Ordered Statistics Tree
-struct OrderedSet {
+class OrderedSet {
   std::vector<int> BIT;
   int sz;
 
+public:
   OrderedSet(int n) {
     sz = 1;
     while (sz < n) {
