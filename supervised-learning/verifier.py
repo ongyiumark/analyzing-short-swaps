@@ -103,7 +103,11 @@ def check_insert(arr_before, arr_after, max_diff):
     if (ups > 1 and downs > 1):
         return False
     
-    return sum(after_diffs) == 0 
+    if ups < downs: comp = max(after_diffs)
+    else: comp = min(after_diffs)
+
+    if comp >= 1: return comp==after_diffs.count(-1)
+    else:  return abs(comp)==after_diffs.count(1)
 
 def check_block(arr_before, arr_after, max_diff):
     first_idx = None
