@@ -4,25 +4,24 @@
 #include <iostream>
 #include <algorithm>
 
-struct ReverseGenerator : Generator {
-  ReverseGenerator(int _N, int _M, std::string DIR) 
-    : Generator(_N, _M, (DIR.size() ? DIR : "reverse-"+std::to_string(_M))) {}
-
-  std::vector<long long> get_allowed_moves(long long u) override {
-    std::vector<long long> moves;
-    std::vector<int> p = get_permutation_from_index(u, N);
-    for (int i = 0; i < N; i++) {
-      for (int j = 1; j < M; j++) {
-        if (i+j >= N) continue;
-        std::reverse(p.begin()+i, p.begin()+i+j+1);
-        moves.emplace_back(get_index_of_permutation(p));
-        std::reverse(p.begin()+i, p.begin()+i+j+1);
-      }
-    }
-    return moves;
+ReverseGenerator::ReverseGenerator(int _N, int _M, std::string DIR) 
+  : Generator(_N, _M, (DIR.size() ? DIR : "reverse-"+std::to_string(_M))) {
+    get_possible_moves();
   }
-};
 
+void ReverseGenerator::get_possible_moves() {
+  std::vector<int> p = get_permutation_from_index(0, N);
+  for (int i = 0; i < N; i++) {
+    for (int j = 1; j < M; j++) {
+      if (i+j >= N) continue;
+      std::reverse(p.begin()+i, p.begin()+i+j+1);
+      moves.emplace_back(get_index_of_permutation(p));
+      std::reverse(p.begin()+i, p.begin()+i+j+1);
+    }
+  }
+}
+
+#ifndef HAS_MAIN
 int main(int argc, char* argv[]) {
   if (argc != 3 && argc != 4) {
     std::cerr << "Expected 2 or 3 parameters, but received " << argc-1 << "." << std::endl;  
@@ -35,3 +34,4 @@ int main(int argc, char* argv[]) {
   g.generate();
   return 0;
 }
+#endif

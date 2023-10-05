@@ -3,37 +3,36 @@
 
 #include <iostream>
 
-struct BlockGenerator : Generator {
-  BlockGenerator(int _N, int _M, std::string DIR) 
-    : Generator(_N, _M, (DIR.size() ? DIR : "block-"+std::to_string(_M))) {}
+BlockGenerator::BlockGenerator(int _N, int _M, std::string DIR) 
+  : Generator(_N, _M, (DIR.size() ? DIR : "block-"+std::to_string(_M))) {
+    get_possible_moves();
+  }
 
-  std::vector<long long> get_allowed_moves(long long u) override {
-    std::vector<long long> moves;
-    std::vector<int> p = get_permutation_from_index(u, N);
-    
-    for (int i = 0; i < N; i++) {
-      for (int j = 1; j < M; j++) {
-        if (i+j >= N) continue;
-        // block moves from i to i+j inclusive
-        for (int k = i; k < i+j; k++) {
-          int left_sz = k-i+1;
-          int right_sz = i+j-k;
+void BlockGenerator::get_possible_moves() {
+  std::vector<int> p = get_permutation_from_index(0, N);
+  
+  for (int i = 0; i < N; i++) {
+    for (int j = 1; j < M; j++) {
+      if (i+j >= N) continue;
+      // block moves from i to i+j inclusive
+      for (int k = i; k < i+j; k++) {
+        int left_sz = k-i+1;
+        int right_sz = i+j-k;
 
-          std::vector<int> next_p(N);
-          for (int idx = 0; idx < N; idx++) {
-            if (idx < i) next_p[idx] = p[idx];
-            else if (idx < i+right_sz) next_p[idx] = p[i+left_sz + (idx-i)];
-            else if (idx < i+right_sz+left_sz) next_p[idx] = p[i+(idx-i-right_sz)];
-            else next_p[idx] = p[idx];
-          }
-          moves.emplace_back(get_index_of_permutation(next_p));
+        std::vector<int> next_p(N);
+        for (int idx = 0; idx < N; idx++) {
+          if (idx < i) next_p[idx] = p[idx];
+          else if (idx < i+right_sz) next_p[idx] = p[i+left_sz + (idx-i)];
+          else if (idx < i+right_sz+left_sz) next_p[idx] = p[i+(idx-i-right_sz)];
+          else next_p[idx] = p[idx];
         }
+        moves.emplace_back(get_index_of_permutation(next_p));
       }
     }
-    return moves;
   }
-};
+}
 
+#ifndef HAS_MAIN
 int main(int argc, char* argv[]) {
   if (argc != 3 && argc != 4) {
     std::cerr << "Expected 2 or 3 parameters, but received " << argc-1 << "." << std::endl;  
@@ -46,3 +45,4 @@ int main(int argc, char* argv[]) {
   g.generate();
   return 0;
 }
+#endif
