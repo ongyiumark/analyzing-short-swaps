@@ -1,4 +1,5 @@
 #include "generator.h"
+#include "converter.h"
 
 #include <queue>
 #include <sstream>
@@ -30,13 +31,24 @@ Generator::Generator(int _N, int _M, std::string _DIR) : N(_N), M(_M), DIR(_DIR)
   distance.resize(sz);
 }
 
+void Generator::get_possible_moves() {}
+
 std::vector<long long> Generator::get_allowed_moves(long long u) {
-  return std::vector<long long>();
+  std::vector<long long> allowed_moves;
+  std::vector<int> p = get_permutation_from_index(u, N);
+  for (long long &v : moves) {
+    std::vector<int> move_p = get_permutation_from_index(v, N);
+    std::vector<int> new_p(N);
+    for (int i = 0; i < N; i++) new_p[i] = p[move_p[i]-1];
+
+    allowed_moves.push_back(get_index_of_permutation(new_p));
+  }
+  return allowed_moves;
 }
 
 void Generator::build_adj_list() {
   for (long long u = 0; u < sz; u++) {
-    if (u % 100000 == 0) std::cerr << "Adjacency list: " << u << "/" << sz << std::endl;
+    if (u % 10000 == 0) std::cerr << "Adjacency list: " << u << "/" << sz << std::endl;
     std::vector<long long> possible_moves = get_allowed_moves(u);
     for (int v : possible_moves) adj_list[u].emplace_back(v);
   }
