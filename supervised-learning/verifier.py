@@ -127,14 +127,13 @@ def check_block(arr_before, arr_after, max_diff):
     
     first_diff = arr_after.index(arr_before[first_idx]) - first_idx
     anchor_idx = first_idx + 1
-    for pos in range(first_idx, last_idx):
+    for pos in range(first_idx, last_idx+1):
         diff = arr_after.index(arr_before[pos]) - pos
         if diff != first_diff:
             anchor_idx = pos
             break
     
-    comp_arr = arr_before[0:first_idx] + arr_before[anchor_idx:last_idx+1] + arr_before[first_idx:anchor_idx] + arr_before[last_idx+1:]
-    return arr_after == comp_arr
+    return arr_after == arr_before[:first_idx] + arr_before[anchor_idx:last_idx+1] +  arr_before[first_idx:anchor_idx] + arr_before[last_idx+1:]
 
 
 def is_valid_move(arr_before, arr_after, strategy):
