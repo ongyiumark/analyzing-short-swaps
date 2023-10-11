@@ -76,7 +76,7 @@ class Measure:
     return accuracy
 
   def run_one(self, n, strategy):
-    file_path = f"../data/{strategy}/perm{n}.csv"
+    file_path = f"./data/{strategy}/perm{n}.csv"
     dataset = self.DatasetClass(file_path, n, self.args["device"])
 
     model = self.ModelClass(n, **self.network_args).to(self.args["device"])

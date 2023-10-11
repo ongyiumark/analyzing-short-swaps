@@ -153,5 +153,6 @@ Examples are shown below.
 <!-- CONTRIBUTORS -->
 ## Contributors
 - [Mark Kevin A. Ong Yiu](https://github.com/ongyiumark)
+- [David Demitri Africa](https://github.com/DavidDemitriAfrica)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
