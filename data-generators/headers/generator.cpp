@@ -5,6 +5,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <algorithm>
 
 #if _MSC_VER
 #include <direct.h>
@@ -27,7 +28,6 @@ Generator::Generator(int _N, int _M, std::string _DIR) : N(_N), M(_M), DIR(_DIR)
   sz = 1;
   for (int i = 1; i <= N; i++) sz *= i;
   adj_list.resize(sz);
-  parent.resize(sz);
   distance.resize(sz);
 }
 
@@ -70,7 +70,6 @@ void Generator::bfs(int s) {
       if (visited[v]) continue;
       q.push(v);
       visited[v] = true;
-      parent[v] = u;
       distance[v] = distance[u]+1;
     }
   }
@@ -86,7 +85,16 @@ void Generator::save_to_csv() {
   file << "state,next_state,distance\n";
   for (int u = 1; u < sz; u++) {
     if (u % 100000 == 0) std::cerr << "CSV: " << u << "/" << sz << std::endl;
-    file << u << "," << parent[u] << "," << distance[u] << "\n";
+    std::vector<long long> possible_moves = get_allowed_moves(u);
+    std::sort(possible_moves.begin(), possible_moves.end());
+
+    int parent = -1;
+    for (long long &v : possible_moves) {
+      if (distance[v] != distance[u]-1) continue;
+      parent = v; break;
+    }
+
+    file << u << "," << parent << "," << distance[u] << "\n";
   }
   
   file.close();
