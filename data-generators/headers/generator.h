@@ -11,7 +11,6 @@ protected:
   int N, M;
   std::string DIR;
   std::vector<std::vector<long long>> adj_list;
-  std::vector<long long> parent;
   std::vector<int> distance;
   std::vector<long long> moves; 
   long long sz;

@@ -65,7 +65,7 @@ We compare our results for _short swaps_ with the same methods applied to other 
 
 Our results can be found in `epoch-results.csv`.
 
-![Inital results using epochs as a measure](supervised-learning/Epoch_MLP-3-300_Results.png)
+![Inital results using epochs as a measure](supervised-learning/Epoch_MLP-3-300_Batch-ALL_Results.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
