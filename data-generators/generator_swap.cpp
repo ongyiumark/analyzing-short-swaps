@@ -2,6 +2,11 @@
 #include "headers/converter.h"
 
 #include <iostream>
+#include <cassert>
+#include <sstream>
+#include <fstream>
+#include <iostream>
+#include <algorithm>
 
 SwapGenerator::SwapGenerator(int _N, int _M, std::string DIR) 
   : Generator(_N, _M, (DIR.size() ? DIR : "swap-"+std::to_string(_M))) {
@@ -18,6 +23,46 @@ void SwapGenerator::get_possible_moves() {
       std::swap(p[i], p[i+j]);
     }
   }
+}
+
+std::pair<int,int> SwapGenerator::get_move_from_state(int u, int v) {
+  std::vector<int> pu = get_permutation_from_index(u, N);
+  std::vector<int> pv = get_permutation_from_index(v, N);
+
+  int n = pu.size();
+  int i = 0, j = n-1;
+  while(pu[i] == pv[i]) i++;
+  while(pu[j] == pv[j]) j--;
+
+  std::swap(pu[i], pu[j]); // make move and check
+  assert(get_index_of_permutation(pu) == v);
+
+  return std::make_pair(i, j);
+}
+
+void SwapGenerator::save_to_csv() {
+  std::string directory = "./../data/" + DIR;  
+  createDir(directory);
+
+  std::ostringstream s;
+  s << "./../data/" << DIR << "/perm" << N << ".csv"; 
+  std::ofstream file(s.str());
+  file << "state,move\n";
+  for (int u = 1; u < sz; u++) {
+    if (u % 100000 == 0) std::cerr << "CSV: " << u << "/" << sz << std::endl;
+    std::vector<long long> possible_moves = get_allowed_moves(u);
+    std::sort(possible_moves.begin(), possible_moves.end());
+
+    int parent = -1;
+    for (long long &v : possible_moves) {
+      if (distance[v] != distance[u]-1) continue;
+      parent = v; break;
+    }
+    auto [i, j] = get_move_from_state(u, parent);
+    file << u << "," << i << "-" << j << "\n";
+  }
+  
+  file.close();
 }
 
 #ifndef HAS_MAIN
