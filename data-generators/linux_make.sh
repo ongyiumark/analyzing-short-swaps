@@ -6,3 +6,4 @@ g++ generator_insert.cpp headers/converter.cpp headers/generator.cpp -o $dir/gen
 g++ generator_reverse.cpp headers/converter.cpp headers/generator.cpp -o $dir/generator_reverse -O3
 g++ generator_block.cpp headers/converter.cpp headers/generator.cpp -o $dir/generator_block -O3
 g++ valid_moves_cli.cpp headers/converter.cpp headers/generator.cpp -o $dir/valid_moves_cli -O3
+g++ visualize_cli.cpp headers/converter.cpp headers/generator.cpp -o $dir/visualize_cli -O3

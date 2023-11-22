@@ -23,6 +23,7 @@ public:
   void bfs(int s);
   void save_to_csv();
   void generate();
+  int get_distance(int u);
 };
 
 class SwapGenerator : public Generator {
