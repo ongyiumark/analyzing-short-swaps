@@ -166,3 +166,6 @@ basura*
 
 # cpp object files
 *.obj
+
+# other
+supervised-learning/models

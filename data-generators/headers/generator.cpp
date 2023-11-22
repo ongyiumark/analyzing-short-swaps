@@ -31,6 +31,10 @@ Generator::Generator(int _N, int _M, std::string _DIR) : N(_N), M(_M), DIR(_DIR)
   distance.resize(sz);
 }
 
+int Generator::get_distance(int u) {
+  return distance[u];
+}
+
 void Generator::get_possible_moves() {}
 
 std::vector<long long> Generator::get_allowed_moves(long long u) {
@@ -104,7 +108,7 @@ void Generator::generate() {
   std::cerr << "Building adjacency list..." << std::endl;
   build_adj_list();
 
-  std::cerr << "Running breadth first search..." << std::endl;
+  std::cerr << "Running breadth-first search..." << std::endl;
   bfs(0);
 
   std::cerr << "Saving to file..." << std::endl;
