@@ -16,6 +16,24 @@ class MLP(nn.Module):
       x = self.activation(layer(x))
     return x
 
+
+class MLPMove(nn.Module):
+  def __init__(self, n, layers):
+    super().__init__()
+
+    layers = [n]+layers
+    linear_modules = [nn.Linear(x,y) for x,y in zip(layers[:-1], layers[1:])]
+    self.layers = nn.ModuleList(linear_modules)
+    self.activation = nn.LeakyReLU()
+    self.out_layer = nn.Linear(layers[-1], n*n)
+  
+  def forward(self, x):
+    for layer in self.layers:
+      x = self.activation(layer(x))
+    x = self.out_layer(x)
+    return x
+
+
 class SelfAttention(nn.Module):
     def __init__(self, input_dim):
         super(SelfAttention, self).__init__()
